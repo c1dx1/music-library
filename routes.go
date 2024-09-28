@@ -200,6 +200,11 @@ func paginateVerses(text string, r *http.Request) []string {
 	return verses[start:end]
 }
 
+type QueryAddSong struct {
+	Group string `json:"group"`
+	Name  string `json:"name"`
+}
+
 // @Summary Add a new song
 // @Description Добавление новой песни с запросом данных о песне из внешнего API
 // @Tags Songs
@@ -210,11 +215,17 @@ func paginateVerses(text string, r *http.Request) []string {
 // @Failure 500 {string} string "Internal server error"
 // @Router /songs [post]
 func addSong(w http.ResponseWriter, r *http.Request) {
-	group := r.URL.Query().Get("group")
-	name := r.URL.Query().Get("name")
+	var querySearch QueryAddSong
+	err := json.NewDecoder(r.Body).Decode(&querySearch)
+	log.Debugf("querySearch: %s", querySearch)
+	if err != nil {
+		log.Warnf("Invalid querySearch: %s", err.Error())
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
 
-	q := fmt.Sprintf("%s %s", group, name)
-	log.Debugf("Adding song with group: %s, name: %s", group, name)
+	q := fmt.Sprintf("%s %s", querySearch.Group, querySearch.Name)
+	log.Debugf("Adding song with group: %s, name: %s", querySearch.Group, querySearch.Name)
 
 	song, err := getGeniusData(q)
 	if err != nil {
