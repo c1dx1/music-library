@@ -95,6 +95,9 @@ const docTemplate = `{
             },
             "post": {
                 "description": "Добавление новой песни с запросом данных о песне из внешнего API",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -104,18 +107,13 @@ const docTemplate = `{
                 "summary": "Add a new song",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Название группы",
-                        "name": "group",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Название песни",
-                        "name": "name",
-                        "in": "query",
-                        "required": true
+                        "description": "Данные о группе и названии песни для поиска",
+                        "name": "song",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.QueryAddSong"
+                        }
                     }
                 ],
                 "responses": {
@@ -123,6 +121,12 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/main.Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "500": {
@@ -252,6 +256,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "main.QueryAddSong": {
+            "type": "object",
+            "properties": {
+                "group": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "main.Song": {
             "type": "object",
             "properties": {

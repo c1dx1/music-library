@@ -208,10 +208,11 @@ type QueryAddSong struct {
 // @Summary Add a new song
 // @Description Добавление новой песни с запросом данных о песне из внешнего API
 // @Tags Songs
-// @Param group query string true "Название группы"
-// @Param name query string true "Название песни"
-// @Produce  json
+// @Accept json
+// @Produce json
+// @Param song body QueryAddSong true "Данные о группе и названии песни для поиска"
 // @Success 201 {object} Song
+// @Failure 400 {string} string "Invalid input"
 // @Failure 500 {string} string "Internal server error"
 // @Router /songs [post]
 func addSong(w http.ResponseWriter, r *http.Request) {

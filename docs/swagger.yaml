@@ -1,4 +1,11 @@
 definitions:
+  main.QueryAddSong:
+    properties:
+      group:
+        type: string
+      name:
+        type: string
+    type: object
   main.Song:
     properties:
       group:
@@ -72,18 +79,16 @@ paths:
       tags:
       - Songs
     post:
+      consumes:
+      - application/json
       description: Добавление новой песни с запросом данных о песне из внешнего API
       parameters:
-      - description: Название группы
-        in: query
-        name: group
+      - description: Данные о группе и названии песни для поиска
+        in: body
+        name: song
         required: true
-        type: string
-      - description: Название песни
-        in: query
-        name: name
-        required: true
-        type: string
+        schema:
+          $ref: '#/definitions/main.QueryAddSong'
       produces:
       - application/json
       responses:
@@ -91,6 +96,10 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/main.Song'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
         "500":
           description: Internal server error
           schema:
