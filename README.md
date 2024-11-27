@@ -49,7 +49,8 @@ Music Library API — это REST API для управления библиот
 ###Получение списка песен:
 
 ```http
-  GET /songs?page=1&limit=10&filter[group]=Muse
+  GET /songs?page=1&limit=10&group=Muse
+```
 
 ##Добавление новой песни:
 
