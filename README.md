@@ -90,7 +90,16 @@ Music Library API — это REST API для управления библиот
 ```
 
 ## Миграции базы данных
-Миграции находятся в папке migrations.
+### Миграции находятся в папке migrations.
+Для применения миграций используйте:
+
+```cmd
+   migrate -path ./migrations -database {dbURL} up
+```
+Для отката:
+```cmd
+   migrate -path ./migrations -database {dbURL} down
+```
 
 ## Swagger
 Swagger документация автоматически генерируется и доступна по адресу:
