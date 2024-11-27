@@ -49,7 +49,26 @@ Music Library API — это REST API для управления библиот
 ### Получение списка песен:
 
 ```http
-  GET /songs?page=1&limit=10&group=Muse
+  GET /songs?page=1&limit=10&group=Queen
+```
+
+### Получение текста песни:
+
+```http
+   GET /songs/{id}
+```
+
+## Изменение данных песни
+
+```http
+   PUT /songs/{id}
+   Content-Type: application/json
+
+   {
+      "group": "The Beatles",
+      "song": "Hey Jude",
+      "releaseDate": "1968-08-26"
+   }
 ```
 
 ## Добавление новой песни:
