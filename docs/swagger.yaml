@@ -1,0 +1,297 @@
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handlers.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.AddSong:
+    properties:
+      group:
+        example: The Beatles
+        type: string
+      song:
+        example: Hey Jude
+        type: string
+    type: object
+  models.EditSong:
+    properties:
+      group:
+        example: The Beatles
+        type: string
+      song:
+        example: Hey Jude
+        type: string
+      releaseDate:
+        example: "1968-08-26"
+        type: string
+      text:
+        example: |-
+          Hey, Jude, don't make it bad
+          Take a sad song and make it better
+          Remember to let her into your heart
+          Then you can start to make it better
+
+          Hey, Jude, don't be afraid You were made to go out and get her
+          The minute you let her under your skin
+          Then you begin to make it better
+          And anytime you feel the pain, hey, Jude, refrain
+          Don't carry the world upon your shoulders
+          For well you know that it's a fool who plays it cool
+          By making his world a little colder
+          Na-na-na-na-na, na-na-na-na
+
+          Hey, Jude, don't let me down
+
+          You have found her, now go and get her
+          (Let it out and let it in)
+          Remember (Hey, Jude) to let her into your heart
+          Then you can start to make it better
+        type: string
+      link:
+        example: https://example.com/heyjude
+        type: string
+    type: object
+  models.Song:
+    properties:
+      id:
+        example: 1
+        type: integer
+      group:
+        example: The Beatles
+        type: string
+      song:
+        example: Hey Jude
+        type: string
+      releaseDate:
+        example: "1968-08-26"
+        type: string
+      text:
+        example: |-
+          Hey, Jude, don't make it bad
+          Take a sad song and make it better
+          Remember to let her into your heart
+          Then you can start to make it better
+
+          Hey, Jude, don't be afraid You were made to go out and get her
+          The minute you let her under your skin
+          Then you begin to make it better
+          And anytime you feel the pain, hey, Jude, refrain
+          Don't carry the world upon your shoulders
+          For well you know that it's a fool who plays it cool
+          By making his world a little colder
+          Na-na-na-na-na, na-na-na-na
+
+          Hey, Jude, don't let me down
+
+          You have found her, now go and get her
+          (Let it out and let it in)
+          Remember (Hey, Jude) to let her into your heart
+          Then you can start to make it better
+        type: string
+      link:
+        example: https://example.com/heyjude
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Music library
+  version: "1.0"
+paths:
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Fetches the music library with optional filters
+      parameters:
+      - description: Filter by id
+        in: query
+        name: id
+        type: integer
+      - description: Filter by group
+        in: query
+        name: group
+        type: string
+      - description: Filter by song
+        in: query
+        name: song
+        type: string
+      - description: Filter by release date
+        in: query
+        name: releaseDate
+        type: string
+      - description: Filter by text
+        in: query
+        name: text
+        type: string
+      - description: Filter by link
+        in: query
+        name: link
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Song'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get the music library
+      tags:
+      - Songs
+    post:
+      consumes:
+      - application/json
+      description: Adds a new song to the library
+      parameters:
+      - description: New song data
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddSong'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Add a new song
+      tags:
+      - Songs
+  /songs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a song by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete a song
+      tags:
+      - Songs
+    get:
+      consumes:
+      - application/json
+      description: Fetches the text of a song by ID with pagination
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get song text
+      tags:
+      - Songs
+    put:
+      consumes:
+      - application/json
+      description: Edits a song's details by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated song data
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.EditSong'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Edit a song
+      tags:
+      - Songs
+swagger: "2.0"
